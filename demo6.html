@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>=^.^=</title>
+<style>
+.container {
+  position: relative;
+}
+.popup {
+  position: absolute;
+  color: #fff;
+  background: rgba( 0, 0, 0, .5 );
+}
+</style>
+</head>
+<body>
+
+<form oninput="update()">
+viewBox x<input id="ctrl0" type="range" min="-512" max="512" step="1" value="0"><br>
+viewBox y<input id="ctrl1" type="range" min="-512" max="512" step="1" value="0"><br>
+viewBox width<input id="ctrl2" type="range" min="1" max="512" step="1" value="256"><br>
+viewBox height<input id="ctrl3" type="range" min="1" max="512" step="1" value="256"><br>
+<button type="button" onclick="scale(1)">リセット</button>
+<button type="button" onclick="scale(2)">2倍</button>
+<button type="button" onclick="scale(0.5)">0.5倍</button>
+<hr>
+width="256" height="256" viewBox="<output name="output"></output>"
+</form>
+
+
+
+<div class="container">
+  <div class="popup">
+    ポップアップ
+  </div>
+
+  <svg
+    width="256"
+    height="256"
+    viewBox="0 0 256 256"
+    preserveAspectRatio="none"
+    style="border: 3px solid #000"
+  >
+    <rect width="256" height="256" fill="none" stroke="#ccc" />
+    <line x1="128" y1="0" x2="128" y2="256" stroke="#ccc" />
+    <line x1="0" y1="128" x2="256" y2="128" stroke="#ccc" />
+    <polygon points="128 33.04 152.37 105.31 228 105.31 167.5 150.69 189.34 222.96 128 180.1 66.66 222.96 88.5 150.69 28 105.31 103.63 105.31 128 33.04" fill="none" stroke="blue"/>
+    <circle cx="128" cy="128" r="5" fill="red" />
+  </svg>
+</div>
+
+<script>
+const $svg = document.querySelector( 'svg' );
+const $popup = document.querySelector( '.popup' );
+const $form = document.forms[ 0 ];
+
+function update() {
+  $form.output.value=`${ $form.ctrl0.value } ${ $form.ctrl1.value } ${ $form.ctrl2.value } ${ $form.ctrl3.value }`
+  $svg.viewBox.baseVal.x = $form.ctrl0.value;
+  $svg.viewBox.baseVal.y = $form.ctrl1.value;
+  $svg.viewBox.baseVal.width = $form.ctrl2.value;
+  $svg.viewBox.baseVal.height = $form.ctrl3.value;
+
+  const svgPoint = $svg.createSVGPoint();
+  svgPoint.x = 128;
+  svgPoint.y = 128;
+  const projectedPoint = svgPoint.matrixTransform( $svg.getCTM() );
+
+  console.log( projectedPoint )
+
+  $popup.style.left = `${ projectedPoint.x }px`;
+  $popup.style.top = `${ projectedPoint.y }px`;
+
+}
+
+function scale( scale ) {
+  $form.ctrl0.value = 0;
+  $form.ctrl1.value = 0;
+  $form.ctrl2.value = 256 / scale;
+  $form.ctrl3.value = 256 / scale;
+  update();
+}
+update();
+</script>
+
+</body>
+</html>
