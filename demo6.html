@@ -63,9 +63,7 @@ function update() {
   $svg.viewBox.baseVal.width = $form.ctrl2.value;
   $svg.viewBox.baseVal.height = $form.ctrl3.value;
 
-  const svgPoint = $svg.createSVGPoint();
-  svgPoint.x = 128;
-  svgPoint.y = 128;
+  const svgPoint = new DOMPoint( 128, 128 );
   const projectedPoint = svgPoint.matrixTransform( $svg.getCTM() );
 
   console.log( projectedPoint )

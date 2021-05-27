@@ -56,9 +56,10 @@ update();
 
 $svg.addEventListener( 'click', ( event ) => {
 
-    const svgPoint = $svg.createSVGPoint();
-    svgPoint.x = event.offsetX; // in screen-coord
-    svgPoint.y = event.offsetY; // in screen-coord
+    const svgPoint = new DOMPoint(
+      event.offsetX, // in screen-coord
+      event.offsetY  // in screen-coord
+    );
     const unProjectedPoint = svgPoint.matrixTransform(
       $svg.getCTM().inverse(),
     );
